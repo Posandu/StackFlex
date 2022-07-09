@@ -1,29 +1,18 @@
-const constants = {
-  appURL: 'http://localhost:3000',
-};
+import { buildSync } from 'esbuild';
+import fs from 'fs';
 
-function saveSnippet(snippet) {
-  return fetch(`${constants.appURL}/snippets`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(snippet),
+fs.rm('dist', { recursive: true }, () => {
+  fs.mkdirSync('dist');
+  // Copy all files in the src folder to the dist folder
+  fs.readdirSync('./src/public').forEach((file) => {
+    fs.copyFileSync(`src/public/${file}`, `dist/${file}`);
   });
-}
 
-const $$ = (selctor) => document.querySelectorAll(selctor);
-
-$$('pre, code').forEach((el) => {
-  console.error(el);
-
-  el.onclick = () => {
-    alert('Saving snippet...');
-    saveSnippet({
-      code: el.innerText,
-      language: el.className,
-    }).then(() => {
-      alert('Snippet saved!');
-    });
-  };
+  buildSync({
+    entryPoints: ['./src/index.js'],
+    outfile: 'dist/index.js',
+    bundle: true,
+    minify: true,
+    target: 'es2020',
+  });
 });

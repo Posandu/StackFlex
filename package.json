@@ -20,6 +20,7 @@
     "@clerk/nextjs": "^3.7.0",
     "@prisma/client": "^4.0.0",
     "clsx": "^1.1.1",
+    "esbuild": "^0.14.48",
     "next": "^12.1.6",
     "prisma": "^4.0.0",
     "react": "^18.2.0",
@@ -60,5 +61,6 @@
     "src/**/*.{json,css,scss,md}": [
       "prettier -w"
     ]
-  }
+  },
+  "type": "module"
 }

@@ -1,0 +1,17 @@
+{
+  "manifest_version": 2,
+  "name": "StackFlex",
+  "version": "1.0",
+
+  "description": "",
+  "icons": {
+    "48": "icons/border-48.png"
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      "js": ["index.js"]
+    }
+  ]
+}
