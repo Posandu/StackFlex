@@ -5,7 +5,6 @@ import { NextApiResponse } from 'next';
 import { prisma } from "src/db"
 import { required } from "src/utils"
 
-prisma;
 export default withAuth(async (req: any, res: NextApiResponse) => {
   const { userId } = req.auth;
   if (!userId) {
