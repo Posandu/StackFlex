@@ -8,7 +8,7 @@ const languages =
     `,`
   );
 
-function createCode(): JSX.Element {
+function Home(): JSX.Element {
   const monacoRef = useRef(null);
   const toast = useToast();
 
@@ -118,4 +118,4 @@ function createCode(): JSX.Element {
   );
 }
 
-export default createCode;
+export default Home;

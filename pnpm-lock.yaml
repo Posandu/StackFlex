@@ -24,6 +24,7 @@ specifiers:
   eslint-plugin-simple-import-sort: ^7.0.0
   eslint-plugin-unused-imports: ^2.0.0
   framer-motion: ^6.4.3
+  fuse.js: ^6.6.2
   husky: ^7.0.4
   lint-staged: ^12.5.0
   lz-string: ^1.4.4
@@ -51,6 +52,7 @@ dependencies:
   clsx: 1.2.1
   esbuild: 0.14.48
   framer-motion: 6.4.3_biqbaboplfbrettd7655fr4n2y
+  fuse.js: 6.6.2
   lz-string: 1.4.4
   next: 12.2.1_biqbaboplfbrettd7655fr4n2y
   prisma: 4.0.0
@@ -5249,6 +5251,11 @@ packages:
   /functions-have-names/1.2.3:
     resolution: {integrity: sha512-xckBUXyTIqT97tq2x2AMb+g163b5JFysYk0x4qxNFwbfQkmNZoiRHb6sPzI9/QV33WeuvVYBUIiD4NzNIyqaRQ==}
     dev: true
+
+  /fuse.js/6.6.2:
+    resolution: {integrity: sha512-cJaJkxCCxC8qIIcPBF9yGxY0W/tVZS3uEISDxhYIdtk8OL93pe+6Zj7LjCqVV4dzbqcriOZ+kQ/NE4RXZHsIGA==}
+    engines: {node: '>=10'}
+    dev: false
 
   /gensync/1.0.0-beta.2:
     resolution: {integrity: sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg==}
