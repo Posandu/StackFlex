@@ -1,5 +1,7 @@
+import { Button } from '@chakra-ui/react';
 import { RedirectToSignIn, SignedIn, SignedOut } from '@clerk/nextjs';
 import { useAuth } from '@clerk/nextjs';
+import Link from 'next/link';
 
 function Home() {
   const { userId } = useAuth();
@@ -12,6 +14,14 @@ function Home() {
       <SignedIn>
         <p>Signed in user id: {userId}</p>
       </SignedIn>
+
+      <Link href='/createCode'>
+        <Button>Create Code</Button>
+      </Link>
+
+      <Link href='/codes'>
+        <Button>Codes</Button>
+      </Link>
 
       <SignedOut>
         <p>Signed out</p>

@@ -17,10 +17,16 @@
     "prepare": "husky install"
   },
   "dependencies": {
+    "@chakra-ui/react": "^2.2.1",
     "@clerk/nextjs": "^3.7.0",
+    "@emotion/react": "^11.9.3",
+    "@emotion/styled": "^11.9.3",
+    "@monaco-editor/react": "^4.4.5",
     "@prisma/client": "^4.0.0",
     "clsx": "^1.1.1",
     "esbuild": "^0.14.48",
+    "framer-motion": "^6.4.3",
+    "lz-string": "^1.4.4",
     "next": "^12.1.6",
     "prisma": "^4.0.0",
     "react": "^18.2.0",
@@ -61,6 +67,5 @@
     "src/**/*.{json,css,scss,md}": [
       "prettier -w"
     ]
-  },
-  "type": "module"
+  }
 }

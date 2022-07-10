@@ -13,9 +13,11 @@ datasource db {
 }
 
 model data {
-  id          String   @id @default(cuid())
-  code        String
-  description String
-  createdAt   DateTime @default(now())
-  owner       String
+  id        String   @id @unique @default(cuid())
+  createdAt DateTime @default(now())
+
+  code     String @db.VarChar(50000)
+  title    String
+  language String
+  owner    String
 }
