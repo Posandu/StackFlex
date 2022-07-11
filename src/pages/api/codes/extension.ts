@@ -11,48 +11,46 @@ function decode(key: string) {
 
 export default async function response(req: NextApiRequest, res: NextApiResponse) {
   const { key } = req.body;
+  console.log((key))
   if (!key) {
-    res.status(401).json({ error: "Unauthorized" })
+    res.status(401).json({ error: "Unauthorized", key: key || "no key" })
   } else {
-    const { getItems, id } = req.body;
+    const { id } = req.body;
 
-    if (!getItems || !id) {
-      res.status(401).json({ error: "Unauthorized" })
-    } else {
-      if (id) {
-        const item = await prisma.data.findUnique({
-          where: {
-            id
-          }
-        })
-
-        if (!item) {
-          return res.status(401).json({ error: "Not found" })
+    if (id) {
+      const item = await prisma.data.findUnique({
+        where: {
+          id
         }
+      })
 
-        return res.status(200).json({
-          item
-        })
-      } else {
-        const items = await prisma.data.findMany({
-          where: {
-            owner: decode(key)
-          },
-          select: {
-            code: false,
-            createdAt: false,
-            owner: false,
-            id: true,
-            language: true,
-            title: true,
-          }
-        })
-
-        return res.status(200).json({
-          items
-        })
+      if (!item) {
+        return res.status(401).json({ error: "Not found" })
       }
+
+      return res.status(200).json({
+        item
+      })
+    } else {
+      const items = await prisma.data.findMany({
+        where: {
+          owner: decode(key)
+        },
+        select: {
+          code: false,
+          createdAt: false,
+          owner: false,
+          id: true,
+          language: true,
+          title: true,
+        }
+      })
+
+      return res.status(200).json({
+        items
+      })
     }
+
   }
 
 

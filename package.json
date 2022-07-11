@@ -17,6 +17,7 @@
     "prepare": "husky install"
   },
   "dependencies": {
+    "@chakra-ui/icons": "^2.0.3",
     "@chakra-ui/react": "^2.2.1",
     "@clerk/nextjs": "^3.7.0",
     "@emotion/react": "^11.9.3",

@@ -1,5 +1,15 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import { Alert, Button, Input, Select, useToast } from '@chakra-ui/react';
+import {
+  Alert,
+  Button,
+  Container,
+  FormControl,
+  FormLabel,
+  Heading,
+  Input,
+  Select,
+  useToast,
+} from '@chakra-ui/react';
 import Editor from '@monaco-editor/react';
 import { useEffect, useRef, useState } from 'react';
 
@@ -72,33 +82,43 @@ function Home(): JSX.Element {
   }
 
   return (
-    <div className='max-w-2xl m-auto my-8'>
-      <h1 className='text-2xl mb-4'>Create Code</h1>
+    <Container maxW='6xl'>
+      <Heading my={8}>Create Code</Heading>
 
-      <p className='text-gray-600 text-sm my-4'>Title</p>
-      <Input onChange={(e) => setTitle(e.target.value)} value={title} />
+      <FormControl>
+        <FormLabel>Title</FormLabel>
+        <Input onChange={(e) => setTitle(e.target.value)} value={title} />
+      </FormControl>
 
-      <p className='text-gray-600 text-sm my-4'>Code</p>
-      <Editor
-        height='500px'
-        defaultValue={code}
-        theme='vs-dark'
-        onMount={handleEditorDidMount}
-        onChange={(newValue) => {
-          setCode(newValue || '');
-        }}
-      ></Editor>
+      <div className='p-2'></div>
 
-      <p className='text-gray-600 text-sm my-4'>Language</p>
-      <Select onChange={(e) => setLanguage(e.target.value)} value={language}>
-        {languages.map((language) => (
-          <option key={language} value={language}>
-            {language}
-          </option>
-        ))}
-      </Select>
+      <FormControl>
+        <FormLabel>Code</FormLabel>
+        <Editor
+          height='500px'
+          defaultValue={code}
+          theme='vs-dark'
+          onMount={handleEditorDidMount}
+          onChange={(newValue) => {
+            setCode(newValue || '');
+          }}
+        ></Editor>
+      </FormControl>
 
-      <div className='p-4'></div>
+      <div className='p-2'></div>
+
+      <FormControl>
+        <FormLabel>Language</FormLabel>
+        <Select onChange={(e) => setLanguage(e.target.value)} value={language}>
+          {languages.map((language) => (
+            <option key={language} value={language}>
+              {language}
+            </option>
+          ))}
+        </Select>
+      </FormControl>
+
+      <div className='p-2'></div>
 
       {error && (
         <Alert colorScheme='red' my={4}>
@@ -114,7 +134,7 @@ function Home(): JSX.Element {
       >
         Create
       </Button>
-    </div>
+    </Container>
   );
 }
 
