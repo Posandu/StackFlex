@@ -123,9 +123,13 @@ function Home(): JSX.Element {
       <FormControl>
         <FormLabel>Language</FormLabel>
         <Select onChange={(e) => setLanguage(e.target.value)} value={language}>
-          {languages.map((language) => (
-            <option key={language} value={language}>
-              {language}
+          {languages.map((Optlanguage) => (
+            <option
+              key={Optlanguage}
+              value={Optlanguage}
+              selected={Optlanguage === language}
+            >
+              {Optlanguage}
             </option>
           ))}
         </Select>

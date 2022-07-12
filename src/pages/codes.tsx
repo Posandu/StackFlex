@@ -2,15 +2,28 @@ import {
   Box,
   Button,
   Container,
+  FormControl,
+  FormLabel,
   Heading,
   Input,
+  Modal,
+  ModalContent,
+  ModalOverlay,
+  Select,
   SimpleGrid,
+  Spinner,
 } from '@chakra-ui/react';
 import { withServerSideAuth } from '@clerk/nextjs/ssr';
+import Editor from '@monaco-editor/react';
 import Fuse from 'fuse.js';
 import { useEffect, useState } from 'react';
 
 import { prisma } from '@/db';
+
+const languages =
+  `css,c++,c,rust,xml,javascript,typescript,go,python,java,html,json,yaml,markdown,shell,php,ruby,swift,kotlin,scala,r,jsx,tsx,C#,sql,vim,plaintext`.split(
+    ','
+  );
 
 interface element {
   id: string;
@@ -23,6 +36,10 @@ interface element {
 function Home({ codes }: { codes: Array<element> }): JSX.Element {
   const [items, setItems] = useState<Array<element>>(codes);
   const [query, setQuery] = useState<string>('');
+
+  const [dialogOpen, setDialogOpen] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [editData, setEditData] = useState<element>({} as element);
 
   const search = () => {
     if (query.trim().length < 1) return setItems(codes);
@@ -42,10 +59,8 @@ function Home({ codes }: { codes: Array<element> }): JSX.Element {
   useEffect(search, []);
 
   return (
-    <Container maxW='container.xl'>
-      <div className='p-4'></div>
-
-      <Heading mb={8}>Library</Heading>
+    <Container maxW='6xl'>
+      <Heading my={8}>Library</Heading>
 
       <Input
         value={query}
@@ -57,7 +72,7 @@ function Home({ codes }: { codes: Array<element> }): JSX.Element {
       <p className='text-gray-700 my-4'>{items.length} Items</p>
 
       <SimpleGrid columns={6} spacing={4} mt={8}>
-        {items.map((element) => (
+        {items.map((element: element) => (
           <Box
             key={element.id + element.title}
             borderRadius='md'
@@ -72,19 +87,131 @@ function Home({ codes }: { codes: Array<element> }): JSX.Element {
             <Heading size='sm'>{element.title}</Heading>
             <p className='mt-4 text-gray-700'>{element.language}</p>
 
-            <Button size='sm' mt={4}>
+            <Button
+              size='sm'
+              mt={4}
+              onClick={() => {
+                setDialogOpen(true);
+                setLoading(true);
+
+                fetch(`/api/codes/getInfo`, {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    id: element.id,
+                  }),
+                })
+                  .then((res) => res.json())
+                  .then((res) => {
+                    if (res.data) {
+                      setEditData(res.data);
+
+                      setTimeout(() => {
+                        setLoading(false);
+                      });
+                    } else {
+                      alert('Error');
+                    }
+                  });
+              }}
+            >
               View
             </Button>
+
             <Button size='sm' mt={4} colorScheme='red' variant='ghost' ml={2}>
               Delete
             </Button>
           </Box>
         ))}
       </SimpleGrid>
+
+      <div className='p-4'></div>
+
+      <Modal
+        isOpen={dialogOpen}
+        onClose={() => setDialogOpen(false)}
+        size='6xl'
+      >
+        <ModalOverlay />
+
+        <ModalContent p={4}>
+          {loading && <Spinner margin='auto' size='xl' />}
+
+          {!loading && (
+            <>
+              <FormControl>
+                <FormLabel>Title</FormLabel>
+                <Input
+                  defaultValue={editData.title}
+                  onChange={(e) =>
+                    setEditData({ ...editData, title: e.target.value })
+                  }
+                />
+              </FormControl>
+
+              <FormControl my={4}>
+                <FormLabel>Code</FormLabel>
+                <Editor
+                  defaultValue={editData.code}
+                  language={editData.language}
+                  height='600px'
+                  onChange={(value) =>
+                    setEditData({ ...editData, code: value })
+                  }
+                  width='100%'
+                  theme='vs-dark'
+                />
+              </FormControl>
+
+              <FormControl mb={4}>
+                <FormLabel>Language</FormLabel>
+
+                <Select
+                  defaultValue={editData.language}
+                  onChange={(e) =>
+                    setEditData({ ...editData, language: e.target.value })
+                  }
+                >
+                  {languages.map((language) => (
+                    <option key={language} value={language}>
+                      {language}
+                    </option>
+                  ))}
+                </Select>
+              </FormControl>
+
+              <div className='flex'>
+                <Button
+                  colorScheme='blue'
+                  onClick={() => {
+                    setLoading(true);
+                  }}
+                >
+                  Update
+                </Button>
+
+                <Button
+                  ml={2}
+                  variant='ghost'
+                  onClick={() => {
+                    setDialogOpen(false);
+                    setEditData({} as element);
+                  }}
+                >
+                  Cancel
+                </Button>
+              </div>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
     </Container>
   );
 }
 
+//🙄
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const fn = async (props: { req: any; resolvedUrl: any }): Promise<any> => {
   const { req, resolvedUrl } = props;

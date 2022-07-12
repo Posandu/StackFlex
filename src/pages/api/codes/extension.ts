@@ -11,7 +11,7 @@ function decode(key: string) {
 
 export default async function response(req: NextApiRequest, res: NextApiResponse) {
   const { key } = req.body;
-  console.log((key))
+
   if (!key) {
     res.status(401).json({ error: "Unauthorized", key: key || "no key" })
   } else {
@@ -50,12 +50,5 @@ export default async function response(req: NextApiRequest, res: NextApiResponse
         items
       })
     }
-
   }
-
-
-
-
 }
-
-
