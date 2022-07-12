@@ -16,6 +16,7 @@ import {
 import { withServerSideAuth } from '@clerk/nextjs/ssr';
 import Editor from '@monaco-editor/react';
 import Fuse from 'fuse.js';
+import Router from 'next/router';
 import { useEffect, useState } from 'react';
 
 import { prisma } from '@/db';
@@ -120,7 +121,31 @@ function Home({ codes }: { codes: Array<element> }): JSX.Element {
               View
             </Button>
 
-            <Button size='sm' mt={4} colorScheme='red' variant='ghost' ml={2}>
+            <Button
+              size='sm'
+              mt={4}
+              colorScheme='red'
+              variant='ghost'
+              ml={2}
+              onClick={() => {
+                if (window.confirm('Are you sure?')) {
+                  fetch(`/api/codes/update`, {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                      id: element.id,
+                      deleteItem: true,
+                    }),
+                  })
+                    .then((res) => res.json())
+                    .then(() => {
+                      Router.reload();
+                    });
+                }
+              }}
+            >
               Delete
             </Button>
           </Box>
@@ -187,7 +212,30 @@ function Home({ codes }: { codes: Array<element> }): JSX.Element {
                   colorScheme='blue'
                   onClick={() => {
                     setLoading(true);
+
+                    fetch(`/api/codes/update`, {
+                      method: 'POST',
+                      headers: {
+                        'Content-Type': 'application/json',
+                      },
+                      body: JSON.stringify({
+                        id: editData.id,
+                        title: editData.title,
+                        language: editData.language,
+                        code: editData.code,
+                      }),
+                    })
+                      .then((res) => res.json())
+                      .then((res) => {
+                        if (res.completed) {
+                          setDialogOpen(false);
+                          setLoading(false);
+                        } else {
+                          alert('Error: ' + res.error);
+                        }
+                      });
                   }}
+                  disabled={loading}
                 >
                   Update
                 </Button>
@@ -199,6 +247,7 @@ function Home({ codes }: { codes: Array<element> }): JSX.Element {
                     setDialogOpen(false);
                     setEditData({} as element);
                   }}
+                  disabled={loading}
                 >
                   Cancel
                 </Button>
