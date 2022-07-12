@@ -1,31 +1,41 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 import {
   Alert,
   Button,
   Container,
   FormControl,
   FormLabel,
+  Grid,
   Heading,
   Input,
   Select,
   useToast,
 } from '@chakra-ui/react';
 import Editor from '@monaco-editor/react';
+import Router from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 
 const languages =
-  `css,c++,c,rust,javascript,typescript,go,python,java,html,json,yaml,markdown,shell,php,ruby,swift,kotlin,scala,r,jsx,tsx,C#,sql,vim`.split(
-    `,`
+  `css,c++,c,rust,xml,javascript,typescript,go,python,java,html,json,yaml,markdown,shell,php,ruby,swift,kotlin,scala,r,jsx,tsx,C#,sql,vim,plaintext`.split(
+    ','
   );
 
 function Home(): JSX.Element {
+  /**
+   * Monaco editor ref
+   */
   const monacoRef = useRef(null);
+
+  /**
+   * Toast
+   */
   const toast = useToast();
 
+  /**
+   * States
+   */
   const [title, setTitle] = useState('');
   const [language, setLanguage] = useState('');
   const [code, setCode] = useState('');
-
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -61,6 +71,8 @@ function Home(): JSX.Element {
             duration: 5000,
             isClosable: true,
           });
+
+          window.close();
         } else {
           setLoading(false);
           setError(res.error || `Unknown error`);
@@ -102,6 +114,7 @@ function Home(): JSX.Element {
           onChange={(newValue) => {
             setCode(newValue || '');
           }}
+          language={language}
         ></Editor>
       </FormControl>
 
@@ -126,14 +139,34 @@ function Home(): JSX.Element {
         </Alert>
       )}
 
-      <Button
-        colorScheme='cyan'
-        onClick={create}
-        disabled={loading}
-        isLoading={loading}
-      >
-        Create
-      </Button>
+      <Grid templateColumns='1fr 1fr' gap={4} w='max-content'>
+        <Button
+          colorScheme='cyan'
+          onClick={create}
+          disabled={loading}
+          isLoading={loading}
+        >
+          Create
+        </Button>
+
+        <Button
+          variant='ghost'
+          onClick={() => {
+            /**
+             * Check if popup is opened
+             */
+            if (window.opener) {
+              window.close();
+            }
+
+            Router.push(`/`);
+          }}
+        >
+          Cancel
+        </Button>
+      </Grid>
+
+      <div className='p-4'></div>
     </Container>
   );
 }
