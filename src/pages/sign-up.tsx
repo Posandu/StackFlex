@@ -1,5 +1,5 @@
 import { Container } from '@chakra-ui/react';
-import { SignIn } from '@clerk/nextjs';
+import { SignUp } from '@clerk/nextjs';
 import { useEffect, useState } from 'react';
 
 function Home() {
@@ -15,7 +15,7 @@ function Home() {
 
   return (
     <Container maxW='container.xl' p={10}>
-      <SignIn signUpUrl='/sign-up' redirectUrl={redirectTo} />
+      <SignUp signInUrl='/sign-in' redirectUrl={redirectTo} />
     </Container>
   );
 }

@@ -1,7 +1,10 @@
 import { AddIcon, EditIcon } from '@chakra-ui/icons';
-import { Container, Heading, LinkBox } from '@chakra-ui/react';
-import { RedirectToSignIn, SignedOut } from '@clerk/nextjs';
+import { Container, Heading, LinkBox, Spinner } from '@chakra-ui/react';
+import { ClerkLoading, SignedIn, SignedOut } from '@clerk/nextjs';
+import Head from 'next/head';
 import Link from 'next/link';
+
+import Landing from '@/components/landing';
 
 function ActionBox({
   icon,
@@ -43,19 +46,29 @@ function ActionBox({
 
 function Home() {
   return (
-    <Container maxW='6xl'>
-      <Heading my={8}>Home</Heading>
+    <>
+      <Head>
+        <title>Home | StackFlex</title>
+      </Head>
 
-      <ActionBox icon={<AddIcon />} text='Create Code' link='/createCode' />
+      <ClerkLoading>
+        <Spinner m='auto' size='xl' />
+      </ClerkLoading>
 
-      <ActionBox icon={<EditIcon />} text='Saved Codes' link='/codes' />
+      <SignedIn>
+        <Container maxW='6xl'>
+          <Heading my={8}>Home</Heading>
+
+          <ActionBox icon={<AddIcon />} text='Create Code' link='/createCode' />
+
+          <ActionBox icon={<EditIcon />} text='Saved Codes' link='/codes' />
+        </Container>
+      </SignedIn>
 
       <SignedOut>
-        <p>Signed out</p>
-
-        <RedirectToSignIn />
+        <Landing />
       </SignedOut>
-    </Container>
+    </>
   );
 }
 

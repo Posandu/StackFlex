@@ -16,6 +16,7 @@ import {
 import { withServerSideAuth } from '@clerk/nextjs/ssr';
 import Editor from '@monaco-editor/react';
 import Fuse from 'fuse.js';
+import Head from 'next/head';
 import Router from 'next/router';
 import { useEffect, useState } from 'react';
 
@@ -61,6 +62,10 @@ function Home({ codes }: { codes: Array<element> }): JSX.Element {
 
   return (
     <Container maxW='6xl'>
+      <Head>
+        <title>Saved Codes | StackFlex</title>
+      </Head>
+
       <Heading my={8}>Library</Heading>
 
       <Input

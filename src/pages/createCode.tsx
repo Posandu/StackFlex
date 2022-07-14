@@ -11,6 +11,7 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import Editor from '@monaco-editor/react';
+import Head from 'next/head';
 import Router from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 
@@ -34,7 +35,7 @@ function Home(): JSX.Element {
    * States
    */
   const [title, setTitle] = useState('');
-  const [language, setLanguage] = useState('');
+  const [language, setLanguage] = useState('plaintext');
   const [code, setCode] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -95,6 +96,10 @@ function Home(): JSX.Element {
 
   return (
     <Container maxW='6xl'>
+      <Head>
+        <title>Create Code | StackFlex</title>
+      </Head>
+
       <Heading my={8}>Create Code</Heading>
 
       <FormControl>
@@ -122,13 +127,13 @@ function Home(): JSX.Element {
 
       <FormControl>
         <FormLabel>Language</FormLabel>
-        <Select onChange={(e) => setLanguage(e.target.value)} value={language}>
+        <Select
+          onChange={(e) => setLanguage(e.target.value)}
+          defaultValue={language}
+          value={language}
+        >
           {languages.map((Optlanguage) => (
-            <option
-              key={Optlanguage}
-              value={Optlanguage}
-              selected={Optlanguage === language}
-            >
+            <option key={Optlanguage} value={Optlanguage}>
               {Optlanguage}
             </option>
           ))}
