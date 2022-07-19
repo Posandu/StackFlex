@@ -1,5 +1,5 @@
+import { UserProvider } from '@auth0/nextjs-auth0';
 import { ChakraProvider, extendTheme } from '@chakra-ui/react';
-import { ClerkProvider } from '@clerk/nextjs';
 import { AppProps } from 'next/app';
 
 import '@/styles/globals.css';
@@ -13,11 +13,11 @@ const theme = extendTheme({ config });
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <ClerkProvider {...pageProps}>
+    <UserProvider>
       <ChakraProvider theme={theme}>
         <Component {...pageProps} />
       </ChakraProvider>
-    </ClerkProvider>
+    </UserProvider>
   );
 }
 

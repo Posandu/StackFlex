@@ -1,73 +1,62 @@
-import { AddIcon, EditIcon } from '@chakra-ui/icons';
-import { Container, Heading, LinkBox, Spinner } from '@chakra-ui/react';
-import { ClerkLoading, SignedIn, SignedOut } from '@clerk/nextjs';
-import Head from 'next/head';
-import Link from 'next/link';
-
-import Landing from '@/components/landing';
-
-function ActionBox({
-  icon,
-  text,
-  link,
-}: {
-  icon: React.ReactNode;
-  text: string;
-  link: string;
-}) {
-  return (
-    <Link href={link}>
-      <LinkBox
-        as='a'
-        className='inline-block rounded'
-        href={link}
-        background='gray.700'
-        ringColor='gray.600'
-        transition='all 0.2s ease'
-        userSelect='none'
-        _hover={{
-          ring: 4,
-          background: 'gray.600',
-        }}
-        _active={{
-          shadow: '8xl',
-          ring: 8,
-        }}
-        mr={4}
-      >
-        <div className='p-4 flex flex-col'>
-          <div className='text-4xl text-center'>{icon}</div>
-          <div className='text-xl mt-4'>{text}</div>
-        </div>
-      </LinkBox>
-    </Link>
-  );
-}
+import { Button, Heading } from '@chakra-ui/react';
+import Image from 'next/image';
 
 function Home() {
   return (
     <>
-      <Head>
-        <title>Home | StackFlex</title>
-      </Head>
+      <div className='min-h-screen text-center overflow-hidden bg-gradient-to-tr from-[#01051bdd] to-[#230a3fdd]'>
+        <div className='h-[20vh]'></div>
 
-      <ClerkLoading>
-        <Spinner m='auto' size='xl' />
-      </ClerkLoading>
+        <Image
+          src='/logo.png'
+          alt='logo'
+          width={200}
+          height={200}
+          className='rounded'
+        />
 
-      <SignedIn>
-        <Container maxW='6xl'>
-          <Heading my={8}>Home</Heading>
+        <Heading className='max-w-max m-auto mt-8' size='4xl'>
+          <del className='opacity-30'>Copy-paste</del>{' '}
+          <span className='bg-gradient-to-tr from-blue-600 to-red-600 bg-clip-text text-transparent'>
+            Save-Use
+          </span>
+        </Heading>
 
-          <ActionBox icon={<AddIcon />} text='Create Code' link='/createCode' />
+        <p className='text-gray-400 text-xl my-10'>
+          StackFlex is a new kind of copy-paste.
+        </p>
 
-          <ActionBox icon={<EditIcon />} text='Saved Codes' link='/codes' />
-        </Container>
-      </SignedIn>
+        <Button
+          size='lg'
+          className='shadow-2xl shadow-blue-700 hover:shadow-blue-900'
+        >
+          Sign up
+        </Button>
+      </div>
 
-      <SignedOut>
-        <Landing />
-      </SignedOut>
+      <section className='py-10 px-8'>
+        <h1 className='text-4xl font-bold text-center mb-8'>
+          What is StackFlex?
+        </h1>
+        <p className='text-xl'>
+          Now, think that you got a problem and Google it. You found a solution.
+          What do you do? You <b>Copy-Paste</b> it! But, imagine you get the
+          same problem again. But you can&apos;t find the solution.{' '}
+          <span className='bg-gradient-to-tr from-blue-600 to-red-600 bg-clip-text text-transparent'>
+            That&apos;s what StackFlex is for.
+          </span>{' '}
+          You save the code and use it from VsCode. Everything is synced.
+        </p>
+
+        <div className='p-8'></div>
+
+        <div className='relative flex align-middle justify-center'>
+          <div className='relative'>
+            <Image src='/so.png' alt='Stack' width='689' height='325' />
+            <span className='block absolute h-8 w-8 bg-blue-600 rounded-full animate-ping left-[35px] top-[35px]'></span>
+          </div>
+        </div>
+      </section>
     </>
   );
 }

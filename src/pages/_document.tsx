@@ -16,7 +16,6 @@ class MyDocument extends Document {
     return (
       <Html lang='en'>
         <Head>
-          <meta name='___creationDate' content={new Date().toISOString()} />
           <ColorModeScript initialColorMode='dark' />
           <link rel='shortcut icon' href='logo.png' type='image/x-icon' />
         </Head>

@@ -17,6 +17,7 @@
     "prepare": "husky install"
   },
   "dependencies": {
+    "@auth0/nextjs-auth0": "^1.9.1",
     "@chakra-ui/icons": "^2.0.3",
     "@chakra-ui/react": "^2.2.1",
     "@clerk/nextjs": "^3.7.0",
@@ -30,6 +31,7 @@
     "fuse.js": "^6.6.2",
     "lz-string": "^1.4.4",
     "next": "^12.1.6",
+    "next-auth": "^4.10.0",
     "prisma": "^4.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

@@ -16,7 +16,7 @@ model data {
   id        String   @id @unique @default(cuid())
   createdAt DateTime @default(now())
 
-  code     String @db.VarChar(50000)
+  code     String @db.VarChar(5000)
   title    String
   language String
   owner    String
