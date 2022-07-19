@@ -1,21 +1,27 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { withAuth } from "@clerk/nextjs/api";
+import { getSession, withApiAuthRequired } from "@auth0/nextjs-auth0"
 import { NextApiResponse } from 'next';
 import { prisma } from "src/db"
 import { required } from "src/utils"
 
-export default withAuth(async (req: any, res: NextApiResponse) => {
-  const { userId } = req.auth;
-  if (!userId) {
-    res.status(401).json({ error: "Unauthorized" })
-  }
+export default withApiAuthRequired(async (req: any, res: NextApiResponse) => {
+  const session = getSession(req, res);
 
-  // Check if the request is a POST request
-  else if (req.method === 'POST') {
-    // Check if the request body is not empty
+  const userId = session?.idToken ?? "";
+
+  /**
+   * Make sure it's a POST request
+   */
+  if (req.method === 'POST') {
+
+    /**
+     * Check all required fields are present
+     */
     if (Object.keys(req.body).length !== 0) {
-      // Check if the request body has all the required fields
+
+      /**
+       * Validate all required fields that are present
+       */
       const requiredFields = required(req.body, ['title', 'code', 'language']);
 
       if (requiredFields.length > 0) {
@@ -23,14 +29,22 @@ export default withAuth(async (req: any, res: NextApiResponse) => {
           error: `The following fields are required: ${requiredFields.join(', ')}`
         })
       } else {
+        /**
+         * Get data from request
+         */
         const { title, code, language } = req.body;
 
-        // Check if the code is not big than 50 kb 
-        if (code.length > 50000) {
+        /**
+         * Only allow 5kb of code
+         */
+        if (code.length > 5000) {
           res.status(400).json({
             error: "The code is too big. It must be less than 50kb"
           })
         } else {
+          /**
+           * Add code to database
+           */
           const result = await prisma.data.create({
             data: {
               code,
@@ -48,6 +62,10 @@ export default withAuth(async (req: any, res: NextApiResponse) => {
       }
     }
   } else {
+
+    /**
+     * Return error if not a POST request
+     */
     res.status(405).json({
       error: 'Method not allowed'
     })

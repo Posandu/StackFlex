@@ -1,3 +1,4 @@
+import { withPageAuthRequired } from '@auth0/nextjs-auth0';
 import {
   Alert,
   Button,
@@ -181,3 +182,5 @@ function Home(): JSX.Element {
 }
 
 export default Home;
+
+export const getServerSideProps = withPageAuthRequired();

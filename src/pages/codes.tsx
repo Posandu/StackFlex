@@ -1,3 +1,4 @@
+import { getSession, withPageAuthRequired } from '@auth0/nextjs-auth0';
 import {
   Box,
   Button,
@@ -13,9 +14,9 @@ import {
   SimpleGrid,
   Spinner,
 } from '@chakra-ui/react';
-import { withServerSideAuth } from '@clerk/nextjs/ssr';
 import Editor from '@monaco-editor/react';
 import Fuse from 'fuse.js';
+import { NextApiRequest, NextApiResponse } from 'next';
 import Head from 'next/head';
 import Router from 'next/router';
 import { useEffect, useState } from 'react';
@@ -265,45 +266,43 @@ function Home({ codes }: { codes: Array<element> }): JSX.Element {
   );
 }
 
-//🙄
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const fn = async (props: { req: any; resolvedUrl: any }): Promise<any> => {
-  const { req, resolvedUrl } = props;
-  const { userId } = req.auth;
+export const getServerSideProps = withPageAuthRequired({
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  async getServerSideProps(context: {
+    req: NextApiRequest;
+    res: NextApiResponse;
+  }) {
+    const session = getSession(context.req, context.res);
 
-  if (!userId) {
+    const userId = session?.idToken ?? '';
+
+    const _data = await prisma.data.findMany({
+      where: {
+        owner: userId,
+      },
+      select: {
+        code: false,
+        owner: false,
+        createdAt: true,
+        id: true,
+        language: true,
+        title: true,
+      },
+    });
+
+    const data = _data.map((element) => {
+      return {
+        ...element,
+        createdAt: '' + element.createdAt,
+      };
+    });
+
     return {
-      redirect: { destination: '/sign-in?redirect_url=' + resolvedUrl },
+      props: {
+        codes: data,
+      },
     };
-  }
-
-  const _data = await prisma.data.findMany({
-    where: {
-      owner: userId,
-    },
-    select: {
-      code: false,
-      owner: false,
-      createdAt: true,
-      id: true,
-      language: true,
-      title: true,
-    },
-  });
-
-  const data = _data.map((element) => {
-    return {
-      ...element,
-      createdAt: '_' + element.createdAt,
-    };
-  });
-
-  return {
-    props: {
-      codes: data,
-    },
-  };
-};
-
-export const getServerSideProps = withServerSideAuth(fn);
+  },
+});
 export default Home;

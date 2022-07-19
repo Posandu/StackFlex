@@ -1,27 +1,38 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { withAuth } from "@clerk/nextjs/api";
+
+import { getSession, withApiAuthRequired } from "@auth0/nextjs-auth0"
 import { NextApiResponse } from 'next';
 import { prisma } from "src/db"
 
-export default withAuth(async (req: any, res: NextApiResponse) => {
-  const { userId } = req.auth;
-  if (!userId) {
-    res.status(401).json({ error: "Unauthorized" })
-  }
+export default withApiAuthRequired(async (req: any, res: NextApiResponse) => {
+  const session = getSession(req, res);
 
-  // Check if the request is a POST request
-  else if (req.method === 'POST') {
-    // Check if the request body is not empty
+  const userId = session?.idToken ?? "";
+
+  /**
+   * Make sure it's a POST request
+   */
+  if (req.method === 'POST') {
+    /**
+     * Check all required fields are present
+     */
     if (Object.keys(req.body).length !== 0) {
       const { id } = req.body;
 
-      // Check if the id is not empty
+      /**
+       * If id is present
+       */
       if (id) {
-        const data = await prisma.data.findUnique({
+        const data = await prisma.data.findMany({
           where: {
             id,
-          }
+            owner: userId,
+          },
+          /**
+           * Only allow 1 record to be returned
+           */
+          take: 1,
         })
 
         res.status(200).json({ data })
@@ -29,7 +40,6 @@ export default withAuth(async (req: any, res: NextApiResponse) => {
       else {
         res.status(400).json({ error: "Bad Request" })
       }
-
     }
   } else {
     res.status(405).json({
