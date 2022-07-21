@@ -277,8 +277,6 @@ export const getServerSideProps = withPageAuthRequired({
 
     const userId = user.sub ?? '';
 
-    console.log('userId', userId);
-
     const _data = await prisma.data.findMany({
       where: {
         owner: {
@@ -293,8 +291,6 @@ export const getServerSideProps = withPageAuthRequired({
         createdAt: true,
       },
     });
-
-    console.log('_data', _data);
 
     const data = _data.map((element) => {
       return {

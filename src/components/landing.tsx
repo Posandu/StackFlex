@@ -1,7 +1,11 @@
+import { useUser } from '@auth0/nextjs-auth0';
 import { Button, Heading } from '@chakra-ui/react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 function Home() {
+  const { user } = useUser();
+
   return (
     <>
       <div className='min-h-screen text-center overflow-hidden bg-gradient-to-tr from-[#01051bdd] to-[#230a3fdd]'>
@@ -26,12 +30,21 @@ function Home() {
           StackFlex is a new kind of copy-paste.
         </p>
 
-        <Button
-          size='lg'
-          className='shadow-2xl shadow-blue-700 hover:shadow-blue-900'
-        >
-          Sign up
-        </Button>
+        {!user && (
+          <Link href='/api/auth/login'>
+            <Button className='shadow-xl border group hover:border-gray-700 transition-all shadow-gray-800 hover:shadow-2xl hover:shadow-gray-700 text-xl'>
+              Sign in / Sign up
+            </Button>
+          </Link>
+        )}
+
+        {user && (
+          <Link href='/dashboard'>
+            <Button className='shadow-xl border group hover:border-gray-700 transition-all shadow-gray-800 hover:shadow-2xl hover:shadow-gray-700 text-xl'>
+              Dashboard
+            </Button>
+          </Link>
+        )}
       </div>
 
       <section className='py-10 px-8'>
