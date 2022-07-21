@@ -1,4 +1,4 @@
-import { getSession, withPageAuthRequired } from '@auth0/nextjs-auth0';
+import { getSession, Session, withPageAuthRequired } from '@auth0/nextjs-auth0';
 import {
   Box,
   Button,
@@ -112,8 +112,8 @@ function Home({ codes }: { codes: Array<element> }): JSX.Element {
                 })
                   .then((res) => res.json())
                   .then((res) => {
-                    if (res.data) {
-                      setEditData(res.data);
+                    if (res.data[0]) {
+                      setEditData(res.data[0]);
 
                       setTimeout(() => {
                         setLoading(false);
@@ -273,23 +273,28 @@ export const getServerSideProps = withPageAuthRequired({
     req: NextApiRequest;
     res: NextApiResponse;
   }) {
-    const session = getSession(context.req, context.res);
+    const { user } = getSession(context.req, context.res) as Session;
 
-    const userId = session?.idToken ?? '';
+    const userId = user.sub ?? '';
+
+    console.log('userId', userId);
 
     const _data = await prisma.data.findMany({
       where: {
-        owner: userId,
+        owner: {
+          equals: userId,
+        },
       },
       select: {
-        code: false,
-        owner: false,
-        createdAt: true,
         id: true,
-        language: true,
         title: true,
+        language: true,
+        code: false,
+        createdAt: true,
       },
     });
+
+    console.log('_data', _data);
 
     const data = _data.map((element) => {
       return {

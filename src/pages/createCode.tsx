@@ -131,12 +131,9 @@ function Home(): JSX.Element {
         <Select
           onChange={(e) => setLanguage(e.target.value)}
           defaultValue={language}
-          value={language}
         >
           {languages.map((Optlanguage) => (
-            <option key={Optlanguage} value={Optlanguage}>
-              {Optlanguage}
-            </option>
+            <option key={Optlanguage}>{Optlanguage}</option>
           ))}
         </Select>
       </FormControl>
@@ -169,7 +166,7 @@ function Home(): JSX.Element {
               window.close();
             }
 
-            Router.push(`/`);
+            Router.push(`/dashboard`);
           }}
         >
           Cancel

@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { getSession, withApiAuthRequired } from "@auth0/nextjs-auth0"
+import { getSession, Session, withApiAuthRequired } from "@auth0/nextjs-auth0"
 import { NextApiResponse } from 'next';
 import { prisma } from "src/db"
 
 export default withApiAuthRequired(async (req: any, res: NextApiResponse) => {
-  const session = getSession(req, res);
+  const { user } = getSession(req, res) as Session
 
-  const userId = session?.idToken ?? "";
+  const userId = user.sub
 
   /**
    * Make sure it's a POST request

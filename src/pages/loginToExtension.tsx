@@ -1,6 +1,5 @@
+import { useUser, withPageAuthRequired } from '@auth0/nextjs-auth0';
 import { Button, Container, Heading, Input } from '@chakra-ui/react';
-import { useAuth } from '@clerk/nextjs';
-import { withServerSideAuth } from '@clerk/nextjs/ssr';
 import { useState } from 'react';
 
 function hash(str: string): string {
@@ -13,8 +12,9 @@ function hash(str: string): string {
 }
 
 function Home() {
-  const { userId } = useAuth();
-  const code = hash(userId || '') || '';
+  const { user } = useUser();
+
+  const code = hash(user?.sub || '');
   const [copied, setCopied] = useState(false);
 
   return (
@@ -52,21 +52,5 @@ function Home() {
   );
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const fn = async (props: { req: any; resolvedUrl: any }): Promise<any> => {
-  const { req, resolvedUrl } = props;
-  const { userId } = req.auth;
-
-  if (!userId) {
-    return {
-      redirect: { destination: '/sign-in?redirect_url=' + resolvedUrl },
-    };
-  }
-
-  return {
-    props: {},
-  };
-};
-
-export const getServerSideProps = withServerSideAuth(fn);
+export const getServerSideProps = withPageAuthRequired();
 export default Home;
