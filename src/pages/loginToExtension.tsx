@@ -1,6 +1,6 @@
 import { useUser, withPageAuthRequired } from '@auth0/nextjs-auth0';
 import { Button, Container, Heading, Input } from '@chakra-ui/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 function hash(str: string): string {
   return str
@@ -16,6 +16,10 @@ function Home() {
 
   const code = hash(user?.sub || '');
   const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    document.title = `Logging you in to StackFlex`;
+  }, []);
 
   return (
     <Container p={8} maxW='4xl'>
